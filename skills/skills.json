@@ -1,0 +1,22 @@
+{
+  "description": "List of skills.sh skills to install for claude-goodness setup",
+  "skills": [
+    {
+      "name": "grill-me",
+      "package": "mattpocock/skills/grill-me",
+      "description": "Interview the user relentlessly about a plan or design until reaching shared understanding"
+    },
+    {
+      "name": "find-skills",
+      "package": "vercel-labs/skills",
+      "skill": "find-skills",
+      "description": "Helps discover and install agent skills when looking for functionality"
+    },
+    {
+      "name": "teach-me",
+      "package": "local",
+      "location": "skills/teach-me",
+      "description": "Break down any topic, article, code, or document into simple explanations and reinforce learning with a multiple choice quiz"
+    }
+  ]
+}
