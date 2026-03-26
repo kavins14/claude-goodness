@@ -1,0 +1,32 @@
+# Cache and temporary files
+cache/
+backups/
+debug/
+downloads/
+file-history/
+paste-cache/
+shell-snapshots/
+telemetry/
+statsig/
+todos/
+plans/
+
+# Session-specific files
+history.jsonl
+stats-cache.json
+policy-limits.json
+
+# IDE-specific
+ide/
+
+# Project-specific (these should live in individual projects)
+projects/
+
+# Machine-specific settings (not synced)
+settings.local.json
+
+# Keep these synced
+!skills/
+!plugins/
+!settings.json
+!README.md
