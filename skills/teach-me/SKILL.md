@@ -22,110 +22,118 @@ Based on their answer:
 - **Topic**: Use WebSearch to research current, accurate information about the topic
 - **Pasted content**: Ask them to provide it
 
-## Step 2: Break Down the Content
+## Step 2: Outline the Learning Plan
 
-Analyze the content and create a structured learning experience:
-
-1. **Identify 3-5 Key Concepts**: What are the main ideas or takeaways?
-2. **Simplify Complex Ideas**: Break down technical jargon, use analogies, provide examples
-3. **Create a Logical Flow**: Present concepts in order of increasing complexity
-
-Present the content in this format:
+Analyze the content and identify 3-5 key concepts. Then present a learning outline to the user:
 
 ```
-# Learning: [Topic Name]
+# Learning Plan: [Topic Name]
 
-## Overview
-[1-2 sentence summary of what they'll learn]
+I've analyzed the content and identified these key concepts we'll cover:
 
----
+1. **[Concept 1 Name]** - [One sentence description]
+2. **[Concept 2 Name]** - [One sentence description]
+3. **[Concept 3 Name]** - [One sentence description]
+[4-5 if needed]
 
-## Key Concept 1: [Name]
-[Clear, simple explanation with examples]
+We'll go through each concept one at a time, and you can ask questions along the way.
+
+Ready to start?
+```
+
+Wait for user confirmation before proceeding.
+
+## Step 3: Present Concepts One by One
+
+**IMPORTANT**: Present ONE concept at a time, then STOP and wait for the user to respond.
+
+For each concept:
+
+```
+## Concept [N]: [Name]
+
+[Clear, simple explanation with examples - 2-3 paragraphs max]
 
 **Why it matters**: [Practical application or relevance]
-
----
-
-## Key Concept 2: [Name]
-[Clear, simple explanation with examples]
-
-**Why it matters**: [Practical application or relevance]
-
----
-
-[Continue for 3-5 concepts total]
-
----
-
-## Summary
-[Bring it all together - how do these concepts connect?]
 ```
 
-## Step 3: Knowledge Check
-
-After presenting the content, create a multiple choice quiz with **5-10 questions** (adjust based on content depth).
-
-**Quiz Format**:
+After presenting the concept, use AskUserQuestion to ask if they want to continue:
 
 ```
-# Knowledge Check
-
-Let's test your understanding! Answer these questions:
-
-**Question 1**: [Question text]
-A) [Option A]
-B) [Option B]
-C) [Option C]
-D) [Option D]
-
-**Question 2**: [Question text]
-A) [Option A]
-B) [Option B]
-C) [Option C]
-D) [Option D]
-
-[Continue for 5-10 questions]
-
----
-
-**How to submit**: Reply with your answers like: "1-A, 2-C, 3-B, 4-D, 5-A"
+AskUserQuestion:
+  question: "Ready to move on to the next concept?"
+  header: "Continue?"
+  options:
+    - label: "Yes, continue (Recommended)"
+      description: "Move to the next concept"
+    - label: "I have questions first"
+      description: "Ask clarifying questions before continuing"
 ```
+
+**Do NOT move to the next concept until the user responds.** They may:
+- Select "Yes, continue" (move to next concept)
+- Select "I have questions first" (answer their questions, then ask again if ready to continue)
+
+After the final concept, present a brief summary connecting all concepts.
+
+## Step 4: Knowledge Check with AskUserQuestion
+
+After presenting all concepts and the summary, create a quiz using the **AskUserQuestion** tool.
+
+**CRITICAL**: Ask ALL quiz questions at once using a single AskUserQuestion call with multiple questions (max 4 questions per call).
+
+Create **3-4 questions** (adjust based on content depth). Use AskUserQuestion with:
+- **questions**: Array of 3-4 question objects, each with:
+  - **question**: The question text
+  - **header**: Short label like "Question 1"
+  - **options**: Array of 2-4 answer choices with:
+    - **label**: The answer text
+    - **description**: Brief explanation (keep subtle, don't give away the answer)
+  - **multiSelect**: false (single answer per question)
+
+After they answer all questions, provide comprehensive feedback evaluating each answer.
 
 **Question Design Principles**:
-- Mix difficulty: include some easy recall questions and some that require deeper understanding
+- Mix difficulty: some easy recall, some requiring deeper understanding
 - Focus on concepts, not trivia
-- Include "application" questions where they need to apply the knowledge
-- Make distractors (wrong answers) plausible but clearly incorrect if they understood the material
+- Include "application" questions where they apply the knowledge
+- Make wrong answers plausible but clearly incorrect if they understood
 - Avoid trick questions or ambiguous wording
 
-## Step 4: Provide Feedback
+**Example Quiz Call**:
+```
+AskUserQuestion:
+  questions:
+    - question: "How do you activate voice mode?"
+      header: "Question 1"
+      multiSelect: false
+      options:
+        - label: "Type /voice and hold spacebar"
+          description: "Command-based activation"
+        - label: "Press Ctrl+V"
+          description: "Keyboard shortcut"
+    - question: "What does /loop do?"
+      header: "Question 2"
+      multiSelect: false
+      options:
+        - label: "Runs command repeatedly at intervals"
+          description: "Recurring execution"
+        - label: "Loops through files"
+          description: "File iteration"
+```
 
-When the user submits answers, evaluate each one:
+## Step 5: Final Summary
+
+After all quiz questions, provide overall feedback:
 
 ```
-# Quiz Results
+# Learning Complete! 🎉
 
-**Score**: X/Y correct ([percentage]%)
+**Your Score**: X/5 correct ([percentage]%)
 
----
+**Strengths**: [Concepts they clearly understood based on correct answers]
 
-**Question 1**: ✓ Correct! / ✗ Incorrect
-**Your answer**: [Their answer]
-**Correct answer**: [Letter] - [Option text]
-**Explanation**: [Why this is correct and why others are wrong]
-
----
-
-[Repeat for each question]
-
----
-
-## Overall Feedback
-
-**Strengths**: [Concepts they clearly understood]
-
-**Areas to review**: [Concepts that need more attention]
+**Areas to review**: [Concepts that need more attention based on incorrect answers]
 
 **Next steps**: [Suggestions for deeper learning or related topics to explore]
 ```
@@ -137,26 +145,64 @@ When the user submits answers, evaluate each one:
 - **Be encouraging**: Learning should feel positive and achievable
 - **Adapt to feedback**: If the user says something is confusing, re-explain differently
 - **Keep it interactive**: This is a conversation, not a lecture
+- **ONE CONCEPT AT A TIME**: Never dump all information at once
+- **WAIT for user input**: After each concept, use AskUserQuestion to ask "Ready to move on?"
+- **Use AskUserQuestion for quiz**: Present ALL quiz questions at once in a single call (max 4 questions)
 
 ## Example Flow
 
 ```
 User: /teach-me
 
-Claude: [Asks what they want to learn from - URL, file, topic, or pasted content]
+Claude: [Asks what they want to learn from]
 
 User: "A topic - teach me about React hooks"
 
-Claude: [Uses WebSearch to research React hooks]
-Claude: [Presents 3-5 key concepts about hooks with clear explanations]
+Claude: [Uses WebSearch to research]
+Claude: [Presents outline with 4 concepts, asks if ready]
 
-User: [Reads the content]
+User: "yes"
 
-Claude: [Presents 7 multiple choice questions]
+Claude: [Presents Concept 1]
+Claude: [Uses AskUserQuestion: "Ready to move on?"]
 
-User: "1-B, 2-A, 3-C, 4-D, 5-A, 6-B, 7-C"
+User: [Selects "Yes, continue"]
 
-Claude: [Grades answers, provides detailed feedback, highlights strengths and areas to review]
+Claude: [Presents Concept 2]
+Claude: [Uses AskUserQuestion: "Ready to move on?"]
+
+User: [Selects "I have questions first"]
+
+Claude: [Waits for user's question]
+
+User: "Can you give an example?"
+
+Claude: [Provides example]
+Claude: [Uses AskUserQuestion: "Ready to move on?"]
+
+User: [Selects "Yes, continue"]
+
+Claude: [Presents Concept 3]
+Claude: [Uses AskUserQuestion: "Ready to move on?"]
+
+User: [Selects "Yes, continue"]
+
+Claude: [Presents Concept 4]
+Claude: [Uses AskUserQuestion: "Ready to move on?"]
+
+User: [Selects "Yes, continue"]
+
+Claude: [Presents summary connecting all concepts]
+Claude: [Uses AskUserQuestion with ALL 4 quiz questions at once]
+
+User: [Answers all 4 questions]
+
+Claude: [Provides comprehensive feedback on all answers]
+Claude: "Question 1: ✓ Correct! [explanation]"
+Claude: "Question 2: ✗ Incorrect. [explanation]"
+Claude: "Question 3: ✓ Correct! [explanation]"
+Claude: "Question 4: ✓ Correct! [explanation]"
+Claude: [Provides final score and overall feedback]
 ```
 
 Ready to help users learn anything!
