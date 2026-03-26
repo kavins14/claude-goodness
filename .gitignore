@@ -25,8 +25,13 @@ projects/
 # Machine-specific settings (not synced)
 settings.local.json
 
+# Skills: Keep custom skills and manifest synced
+# Note: To exclude a specific CLI-installed skill, add it explicitly (e.g., skills/some-skill/)
+!skills/skills.json
+
 # Keep these synced
 !skills/
 !plugins/
 !settings.json
 !README.md
+!setup-skills.sh
