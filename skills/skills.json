@@ -18,5 +18,12 @@
       "location": "skills/teach-me",
       "description": "Break down any topic, article, code, or document into simple explanations and reinforce learning with a multiple choice quiz"
     }
+  ],
+  "local_skills": [
+    {
+      "name": "resume-builder",
+      "location": "skills/resume-builder",
+      "description": "Guide the user step by step through building a complete resume by interviewing them one section at a time"
+    }
   ]
 }

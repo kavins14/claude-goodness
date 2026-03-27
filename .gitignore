@@ -11,6 +11,8 @@ statsig/
 todos/
 plans/
 
+.env
+
 # Session-specific files
 history.jsonl
 stats-cache.json
